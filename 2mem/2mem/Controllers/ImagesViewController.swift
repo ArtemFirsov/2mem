@@ -13,9 +13,7 @@ class ImagesViewController: UICollectionViewController {
 
     var searchPhotoArray = [Result]()
     var inputId = ""
-    private var timer: Timer?
     var apiService = ApiService()
-    var pages = 0
     
     
     
@@ -30,10 +28,10 @@ class ImagesViewController: UICollectionViewController {
       super .viewWillAppear(animated)
      
             self.apiService.getPhotos(searchTerm: self.inputId) { [weak self] (searchResponse) in
+                guard let self = self else { return }
                 guard let response = searchResponse else { return }
-                self?.searchPhotoArray = response.results
-                self?.pages = response.totalPages
-                self?.collectionView.reloadData()
+                self.searchPhotoArray = response.results
+                self.collectionView.reloadData()
                 }
     }
 
@@ -81,8 +79,6 @@ extension ImagesViewController {
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(400))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
-    //        section.orthogonalScrollingBehavior = .continuous
-    //        return section
             let layout = UICollectionViewCompositionalLayout(section: section)
             return layout
         }
